@@ -8,7 +8,7 @@ Momentan beherrscht das "Programm" foldende Methoden:
 - Punktwolke ausdünnen (Voxelgrid)
 - Ausreißer entfernen (StatisticalOutlierRemoval)
 - Bestimmung von Normalen für gesetzte Anzahl von Punkten (NormalEstimation)
-- Finden von Ebenen und Abspeichern dieser [mom. im .exe-ordner], + Nennen der Ebenenparameter [mom. in Konsole](SAGSegmentation+ExtractIndices, diese Funktion aktuell noch in der Main (Start.cpp) eingebunden)
+- Finden von Ebenen und Abspeichern dieser mom. im .exe-ordner, + Nennen der Ebenenparameter mom. in Console,(SAGSegmentation+ExtractIndices, diese Funktion aktuell noch in der Main (Start.cpp) eingebunden)
 
 - in der Main (Start.cpp) sind außerdem folgende Ideen zu weiterem Ablauf notiert:
 
