@@ -17,12 +17,12 @@ in der Main (Start.cpp) sind außerdem folgende Ideen zu weiterem Ablauf notiert
 - ausreißerfilter nach dem ebenenfinden ist sicher sinnvoll, da fremde objekte in ebenen liegen
 - oder evtl methode die sicherstellt, dass ebene aus einem objekt besteht = segmentierung?
 - es muss aus der Ebenenpunktwolke noch ein polygon erstellt werden (coefficients rausschreiben)
---> äußerste Punkte der ebene als "außenkante" finden. diese könnte als begrenzung für polygon dienen, wenn es es aus koeffizienten generiert wird
-==> siehe Bernd Grafes Anleitung in Präsentation 
+- --> äußerste Punkte der ebene als "außenkante" finden. diese könnte als begrenzung für polygon dienen, wenn es es aus koeffizienten generiert wird
+- ==> siehe Bernd Grafes Anleitung in Präsentation 
 - schleife in main, die jeweils in einem durchlauf folgendes machen lässt:
 - finde eine ebene, extrahiere die punkte 
 - bereinigen und außenkante finden
 - polygon erstellen (+bearbeiten? und speichern)
 - nächste Ebene finden
---> alle methoden als separate klassen erstellen?
+- --> alle methoden als separate klassen erstellen?
 
