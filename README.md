@@ -10,8 +10,8 @@ Momentan beherrscht das "Programm" foldende Methoden:
 - Bestimmung von Normalen für gesetzte Anzahl von Punkten (NormalEstimation)
 - Finden von Ebenen und Abspeichern dieser mom. im .exe-ordner, + Nennen der Ebenenparameter mom. in Console,(SAGSegmentation+ExtractIndices, diese Funktion aktuell noch in der Main (Start.cpp) eingebunden)
 
-- in der Main (Start.cpp) sind außerdem folgende Ideen zu weiterem Ablauf notiert:
 
+in der Main (Start.cpp) sind außerdem folgende Ideen zu weiterem Ablauf notiert:
 
 - spielen mit Treshhold und %, bis zu denen iteriert werden soll (SAGSegmentation+ExtractIndices)
 - ausreißerfilter nach dem ebenenfinden ist sicher sinnvoll, da fremde objekte in ebenen liegen
