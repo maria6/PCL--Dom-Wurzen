@@ -12,18 +12,26 @@ Momentan beherrscht das "Programm" foldende Methoden:
 
 
 Ideen zu weiterem Ablauf:
+1.
 
 - ==> siehe Bernd Grafes Anleitung in Präsentation 
 - schleife in main, die jeweils in einem durchlauf folgendes machen lässt:
-- finde eine ebene, extrahiere die punkte (SACSegmentation)
+- finde eine ebene, extrahiere die punkte (SACSegmentation); LARS
+- ggf beim Finden als Bedingung eine minimale Anzahl an Umgebungspunkten festlegen, damit punkt zu ebene gehören darf
 - bereinigen (OutlierRemoval)
-- Entfernen, was nicht zur Hauptgruppe gehört (Clusterextraction)
+- Entfernen, was nicht zur Hauptgruppe gehört (Clusterextraction) MARIA
 - Punkte der außenkante finden (BoundaryEstimation )
 - außenkante in Linie umwandeln (ConvexHull2D / ConcaveHull)
 - polygon erstellen (Ebene anhand der ebenenkoeffizienten aus SACSegmentation + Begrenzung durch Außenkante?)
 - nächste Ebene finden (oder beim ersten mal alle Ebenen finden,speichern und nacheinander durch diesen prozess schicken)
 
 - Polygone zusammensetzen und ggf verschneiden
+
+2. GEORG
+- aus Ebenenkoeffizienten unendlich große Ebenen erstellen
+- diese Ebenen verschneiden, für Prüfung der Sinnhaftigkeit auch deren Normalen nutzen (NormalEstimation)
+
+
 
 
 Ideen zur Arbeitsweise:
