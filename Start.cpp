@@ -62,6 +62,23 @@ int main (int argc, char** argv)
 	//Nes.UseNormalEstimation(cloud1, normals_output, 5);
 	//visualizer01.showCloud(Nes.getOutput());   ---> Normalen nicht mit Cloudviewer darstellbar!!!!!
 	
+	//// ACHTUNG: Momentan enthalten Vektoren für Cloud und Indices in jedem Element die gleiche Cloud/ die gleichen Indices!
+	// // Find Planes in the Pointcloud with SACSegmentation
+	// SACSegmentation seg;
+	// seg.UseSACSegmentation(cloud2, segmentation_output_folder);
+	// //Get the Plane Coefficients and write them to console (it aktually is a vector that contains one vector with coefficients per plane) 
+	// std::vector<double> coefficients_vector;
+	// for (int i=0; i < seg.getCoefficients_Vector().size(); i++){
+	// 	coefficients_vector = seg.getCoefficients_Vector()[i];
+	// 	std::cout<<" Coefficients for plane " << i << ": " << 
+	// 		coefficients_vector[0] << " " << coefficients_vector[1] << " " << coefficients_vector[2] << " " << coefficients_vector[3] << std::endl;
+	// }
+	// // Read plane clouds from returned cloud vector
+	// for (int i=0; i < seg.getInliers_CloudVector().size(); i++){
+	// 	visualizer01.showCloud(seg.getInliers_CloudVector()[i]);
+	// }
+
+	
 
 	//wait for Enter, then quit	
 	std::cin.ignore();	//std::cin.get(); //system("PAUSE"); //no difference
