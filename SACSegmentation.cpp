@@ -17,17 +17,8 @@ SACSegmentation::SACSegmentation(void)
 SACSegmentation::~SACSegmentation(void)
 {}
 
-// temp clouds for segmentation/extraction loop
-pcl::PointCloud<pcl::PointXYZRGBA>::Ptr inliers_cloud (new pcl::PointCloud<pcl::PointXYZRGBA>);
-pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZRGBA>);
-
-// temp objects
-pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
-pcl::PointIndices::Ptr inliers_indices (new pcl::PointIndices);
-
 // output objects
 std::vector<pcl::PointCloud<pcl::PointXYZRGBA>::Ptr> inliers_cloudvector;
-std::vector<double> coefficients_vector;
 std::vector<std::vector<double>> coefficients_vectorvector;
 
 
@@ -36,6 +27,7 @@ void SACSegmentation::UseSACSegmentation(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr
 	//////Planar Segmentation
 	pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
 	pcl::PointIndices::Ptr inliers_indices (new pcl::PointIndices);
+	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_f (new pcl::PointCloud<pcl::PointXYZRGBA>);
 	// Create the segmentation object
 	pcl::SACSegmentation<pcl::PointXYZRGBA> seg;
 	// Optional
@@ -48,8 +40,8 @@ void SACSegmentation::UseSACSegmentation(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr
 
 	// Create the filtering object
 	pcl::ExtractIndices<pcl::PointXYZRGBA> extract;
-	int i = 0, nr_points = (int) cloud_input->points.size ();
 
+	int i = 0, nr_points = (int) cloud_input->points.size ();
 	// While 30% of the original cloud is still there
 	while (cloud_input->points.size () > 0.3 * nr_points)
 	{
@@ -63,44 +55,23 @@ void SACSegmentation::UseSACSegmentation(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr
 		}
 
 		//write coefficients into a single vector and this vector into another one that collects them
+		std::vector<double> coefficients_vector;
 		coefficients_vector.push_back(coefficients->values[0]);
 		coefficients_vector.push_back(coefficients->values[1]);
 		coefficients_vector.push_back(coefficients->values[2]);
 		coefficients_vector.push_back(coefficients->values[3]);
-/////////////////////////////////////////////////////////////////////////////////
-		// gleiches Problem wie bei CLoudvector. Vector enthält nur Cloud/Koeffizienten des letzten Schleifendurchlaufs
 		coefficients_vectorvector.push_back(coefficients_vector);
-///////////////////////////////////////////////////////////////////////////////
-
-		////Ausgabe der Ebenenkoeffizienten in Konsole (in ax + by + cz + d = 0 form)
-		//std::cerr << "Model coefficients: " << coefficients->values[0] << " " 
-		//	<< coefficients->values[1] << " "
-		//	<< coefficients->values[2] << " " 
-		//	<< coefficients->values[3] << std::endl;
 
 		// Extract the inliers_indices (= the points in the new plane)
+		pcl::PointCloud<pcl::PointXYZRGBA>::Ptr inliers_cloud (new pcl::PointCloud<pcl::PointXYZRGBA>);
 		extract.setInputCloud (cloud_input);
 		extract.setIndices (inliers_indices);
 		extract.setNegative (false);
 		extract.filter (*inliers_cloud);
-		std::cerr << "PointCloud representing the planar component: " << inliers_cloud->width * inliers_cloud->height << " data points." << std::endl;
-
-///////////////////////////////////////////////////////////////	///////
-		//Problembereich: 
-		//Pro schleifendurchlauf soll die aktuelle Ebene (=inliers_cloud) in den vector (=inliers_cloudvector) geschrieben werden.
-		//Der Vektor soll als Container dienen, um alle gefundenen Ebenen mit einem mal an die Main zurückgeben zu können.
-		//Zuerst wird die aktuelle Ebene in den Vektor geschrieben, und mit der For-Schleife wird dann geprüft, wie groß die einzelnen Wolken im Vektor sind.
-		//Nach Abschluss stimmt zwar auch die Anzahl der Ebenen im Vektor. Aber an jeder Stelle im Vektor liegt nur die allerletzte gefundene Ebene, anstatt erste bis letzte Ebene.
-		//Es wirkt, als würde bei jedem Schleifendurchlauf der Platz im Vektor geschaffen werden, aber die konkrete Werteübergabe würde erst ganz am Ende geschehen.
-		//Wie sorge ich also dafür, dass wirklich die jeweils aktuelle Wolke inliers_cloud im Vektor gespeichert wird und nicht nur eine Referenz, die am ja Ende des Durchlaufs nicht mehr stimmt?
+		std::cerr << "PointCloud representing the planar component " << i << ": " << inliers_cloud->width * inliers_cloud->height << " data points." << std::endl;
 
 		// write points to cloudvector to collect the pointclouds
 		inliers_cloudvector.push_back(inliers_cloud);
-		// test the size of each cloud in vector --> siehe output-screenshot
-		for (int j=0; j < inliers_cloudvector.size();j++){
-			std::cout <<inliers_cloudvector[j]->width * inliers_cloudvector[j]->height << std::endl;
-		}
-///////////////////////////////////////////////////////////////////////	
 
 		// create output folder if neccessary
 		const char* path = cloud_output_path.c_str();
@@ -112,9 +83,8 @@ void SACSegmentation::UseSACSegmentation(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr
 		// write points to file
 		std::stringstream ss;
 		pcl::PCDWriter writer;
-		ss << "plane_" << i << "_" <<  inliers_cloud->width * inliers_cloud->height << ".pcd";
+		ss << "plane_" << i << ".pcd";
 		writer.write<pcl::PointXYZRGBA> (cloud_output_path + ss.str (), *inliers_cloud, false);
-
 
 		// Create the filtering object for next loop
 		extract.setNegative (true);
@@ -124,11 +94,25 @@ void SACSegmentation::UseSACSegmentation(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr
 	}
 
 
+	//Test Output for Plane Coefficients (it is a vector that contains one vector with coefficients per plane) 
+	 std::cout << std::endl;
+	 std::vector<double> coefficients_vector;
+	 for (int i=0; i < coefficients_vectorvector.size(); i++){
+	 	coefficients_vector = coefficients_vectorvector[i];
+	 	std::cout<<"Coefficients for plane " << i << ": " << 
+	 		coefficients_vector[0] << " " << coefficients_vector[1] << " " << coefficients_vector[2] << " " << coefficients_vector[3] << std::endl;
+	 }
+	 std::cout << std::endl;
+
+	 //// test the size of each cloud in inliers_vector
+	 //for (int j=0; j < inliers_cloudvector.size();j++){
+	 //	std::cout <<inliers_cloudvector[j]->width * inliers_cloudvector[j]->height << std::endl;
+	 //}
+	 //std::cout << std::endl;
+
 	std::cout<< "Number of Planes	        (=Length Inliers_CloudVector): "<< inliers_cloudvector.size() <<std::endl;
-//	std::cout<< "Number of Coefficient Sets (=Length Coefficients_Vector): "<< coefficients_vectorvector.size() <<std::endl;
-
-	
-
+	std::cout<< "Number of Coefficient Sets (=Length Coefficients_Vector): "<< coefficients_vectorvector.size() <<std::endl;
+	std::cout << std::endl;
 }
 
 

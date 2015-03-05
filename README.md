@@ -8,8 +8,8 @@ Momentan beherrscht das "Programm" foldende Methoden:
 - Punktwolke ausdünnen (Voxelgrid)
 - Ausreißer entfernen (StatisticalOutlierRemoval)
 - Bestimmung von Normalen für gesetzte Anzahl von Punkten (NormalEstimation)
-- Finden von Ebenen+Koefficienten und Abspeichern dieser (SAGSegmentation) (Ausgabevektoren enthalten momentan nur die letzte Ebene)
-- Clustern von Punktwolken bzw Ebenen (Clustering) (Momentan wird nur letzte Wolke zurückgegeben statt alle)
+- Finden von Ebenen+Koeffizienten (SAGSegmentation) 
+- Clustern von Punktwolken bzw Ebenen (Clustering) 
 
 
 Ideen zu weiterem Ablauf:

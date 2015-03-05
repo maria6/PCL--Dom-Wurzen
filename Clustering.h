@@ -13,8 +13,8 @@ class Clustering
 public:
 	Clustering(void);
 	~Clustering(void);
-	void Extraction(pcl::PointCloud<pcl::PointXYZRGBA>::Ptr KT_cloud_in, std::string  cloud_output_path);
-	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr getOutput();
+	void Extraction(std::vector<pcl::PointCloud<pcl::PointXYZRGBA>::Ptr> cloudvector_in, std::string  cloud_output_path);
+	std::vector<pcl::PointCloud<pcl::PointXYZRGBA>::Ptr> getOutput();
 };
 
 
