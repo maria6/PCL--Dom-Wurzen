@@ -5,6 +5,7 @@
 #include "NormalEstimation.h"
 #include "SACSegmentation.h"
 #include "Clustering.h"
+#include "ConcaveHull.h"
 
 
 #include <iostream>
@@ -34,9 +35,6 @@ int main (int argc, char** argv)
 {	// Create some empty pointclouds
 	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud1 (new pcl::PointCloud<pcl::PointXYZRGBA>);
 	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud2 (new pcl::PointCloud<pcl::PointXYZRGBA>);
-	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud3 (new pcl::PointCloud<pcl::PointXYZRGBA>);
-	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud4 (new pcl::PointCloud<pcl::PointXYZRGBA>);
-	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud5 (new pcl::PointCloud<pcl::PointXYZRGBA>);
 
 	// Set home as folder for point cloud data 
 	std::string home=("D:\\Dokumente\\Studium\\Wahlfaecher\\Objekterkennung und Geodatenfusion\\Test01\\Punktwolken\\");
@@ -47,17 +45,16 @@ int main (int argc, char** argv)
 	std::string filter_output_outliers=(home+"Dom_filtered_1m_outliers.txt"); //Set Path
 	std::string normals_output=(home+"Dom_filtered_1m_normals.txt");//Set Path
 	std::string segmentation_output_folder=(home+"Segmentation\\");
-	std::string planepath (home+"Segmentation\\plane_0_760.pcd");
-	std::string clusterpath(home+"Clustering");
+	std::string clustering_output_folder(home+"Clustering\\");
+	std::string concavehull_output_folder(home+"ConcaveHull\\");
 
 	// Read point cloud data from paths into empty point clouds 
 	pcl::PCDReader reader;
 	Visualizer visualizer01;
 	reader.read (input, *cloud1); 
 	reader.read (filter_output, *cloud2);
-	reader.read (filter_output_inliers, *cloud3); 	
-	reader.read (filter_output_outliers, *cloud4); 
-	reader.read (planepath, *cloud5);
+	
+
 
 	// // Reduce Number of Pixel
 	// Voxelgrid Voxel;
@@ -83,11 +80,9 @@ int main (int argc, char** argv)
 	//visualizer01.showCloud(Nes.getOutput());   ---> Normalen nicht mit Cloudviewer darstellbar!!!!!
 	
 
-	// ACHTUNG: Momentan enthalten Vektoren für Cloud und Indices in jedem Element die gleiche Cloud/ die gleichen Indices!
-	 //// Find Planes in the Pointcloud with SACSegmentation
-	 //SACSegmentation seg;
-	 //seg.UseSACSegmentation(cloud2, segmentation_output_folder);
-
+	 // Find Planes in the Pointcloud with SACSegmentation
+	 SACSegmentation seg;
+	 seg.UseSACSegmentation(cloud2, segmentation_output_folder);
 	 ////Get the Plane Coefficients and write them to console (it aktually is a vector that contains one vector with coefficients per plane) 
 	 //std::vector<double> coefficients_vector;
 	 //for (int i=0; i < seg.getCoefficients_Vector().size(); i++){
@@ -95,17 +90,29 @@ int main (int argc, char** argv)
 	 //	std::cout<<" Coefficients for plane " << i << ": " << 
 	 //		coefficients_vector[0] << " " << coefficients_vector[1] << " " << coefficients_vector[2] << " " << coefficients_vector[3] << std::endl;
 	 //}
-
 	 //// Read plane clouds from returned cloud vector
 	 //for (int i=0; i < seg.getInliers_CloudVector().size(); i++){
 	 //	visualizer01.showCloud(seg.getInliers_CloudVector()[i]);
 	 //}
 
-	 // Achtung: bisher lieftert getOutput() nur eine einzelne Wolke statt ganzen Vector!
+
 	 //Find Cluster in the Planes
 	 Clustering cluster;
-	 cluster.Extraction(cloud5, clusterpath);
-	 visualizer01.showCloud(cluster.getOutput());
+	 cluster.Extraction(seg.getInliers_CloudVector(), clustering_output_folder);
+	 //// Read plane clouds from returned cloud vector
+	 //for (int i=0; i < cluster.getOutput().size(); i++){
+	 //	 visualizer01.showCloud(cluster.getOutput()[i]);
+	 //}
+	
+
+	 // Find outline of clouds
+	 ConcaveHull ch;
+	 ch.Hull(cluster.getOutput(), concavehull_output_folder);
+	 //// Read hull clouds from returned cloud vector
+	 //for (int i=0; i < cluster.getOutput().size(); i++){
+	 //	 visualizer01.showCloud(ch.getOutput()[i]);
+	 //}
+	 
 
 
 

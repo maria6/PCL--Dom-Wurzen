@@ -10,6 +10,7 @@ Momentan beherrscht das "Programm" foldende Methoden:
 - Bestimmung von Normalen für gesetzte Anzahl von Punkten (NormalEstimation)
 - Finden von Ebenen+Koeffizienten (SAGSegmentation) 
 - Clustern von Punktwolken bzw Ebenen (Clustering) 
+- Finden von Punkten an Außenkanten einer Punktwolke (ConcaveHull)
 
 
 Ideen zu weiterem Ablauf:

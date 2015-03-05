@@ -18,7 +18,8 @@ Clustering::~Clustering(void)
  std::vector<pcl::PointCloud<pcl::PointXYZRGBA>::Ptr> cloudvector_out;
 
  void Clustering::Extraction(std::vector<pcl::PointCloud<pcl::PointXYZRGBA>::Ptr> cloudvector_in, std::string cloud_output_path)
-  {
+ {
+  int j = 0;
   for (int i=0; i<cloudvector_in.size(); i++){
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_in;
     cloud_in.swap(cloudvector_in[i]);
@@ -36,7 +37,6 @@ Clustering::~Clustering(void)
     ec.setInputCloud (cloud_in);
     ec.extract (cluster_indices);
 
-    int j = 0;
     for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin (); it != cluster_indices.end (); ++it)
     {
       pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_cluster (new pcl::PointCloud<pcl::PointXYZRGBA>);
@@ -55,7 +55,7 @@ Clustering::~Clustering(void)
 
       //write points to file
   	  pcl::PCDWriter writer;
-      std::cout << "PointCloud representing the Cluster: " << cloud_cluster->points.size () << " data points." << std::endl;
+      std::cout << "PointCloud representing the Cluster " << j << ": " << cloud_cluster->points.size () << " data points." << std::endl;
       std::stringstream ss;
       ss << "cloud_cluster_" << j << ".pcd";
       writer.write<pcl::PointXYZRGBA> (cloud_output_path + ss.str (), *cloud_cluster, false); //*
